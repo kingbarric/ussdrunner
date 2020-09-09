@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 public class UssdCaller {
 
     @PostMapping("starter")
-    public String makeFirstCall(@RequestBody  USSDdto input){
+    public String makeFirstCall(USSDdto input){
         System.out.println(input);
         return displayMenu();
     }
