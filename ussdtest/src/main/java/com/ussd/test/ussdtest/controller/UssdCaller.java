@@ -2,6 +2,7 @@ package com.ussd.test.ussdtest.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -36,22 +37,26 @@ public class UssdCaller {
     @ResponseBody
     public String getUssdMessage(USSDdto input) throws Exception {
         System.out.println(input);
-        if(input.getText() ==null){
-            return  displayMenu();
+        //String[] array = input.getText().split("\\*", -1);
+        String text = input.getText().trim();
+        String[] array = text.split("\\*", -1);
+        int level = array.length;
+        if (StringUtils.isEmpty(input.getText())) {
+            return displayMenu(); // show the home/first menu
         }
-        int choice  = Integer.parseInt(input.getText());
-        switch (choice){
-            case 1:
+        else if (level > 0) {
+            if ("1".equalsIgnoreCase(array[0])) {
+
                 return ussd_end("your balance is #5000m");
-
-            case 2:
+            } else if ("2".equalsIgnoreCase(array[0])) {
+                // If user selected 2, send them to the about menu
                 return ussd_end("you have transferred  #5000m");
-
-            default:
+            } else if ("3".equalsIgnoreCase(array[0])) {
+                // If user selected 2, send them to the about menu
                 return ussd_proceed("try a different choice");
-
+            }
         }
-
+        return ussd_end("Still under development. ");
     }
 
     private String  ussd_proceed(String ussd_text){
